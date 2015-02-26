@@ -1,4 +1,4 @@
-# moodle-tool_removeoldcourses
+# moodle-tool_oldcoursesremoval
 Old courses removal tool for Moodle
 
 Moodle admin tool plugin - Old courses removal
@@ -13,13 +13,13 @@ It was created by Gilles-Philippe Leblanc, developer at Université de Montréal
 
 To install it using git, type this command in the admin/tool folder of your Moodle install:
 ```
-git clone https://github.com/leblangi/moodle-tool_removeoldcourses.git removeoldcourses
+git clone https://github.com/leblangi/moodle-tool_oldcoursesremoval.git oldcoursesremoval
 ```
-Then add /admin/tool/removeoldcourses to your git ignore.
+Then add /admin/tool/oldcoursesremoval to your git ignore.
 
 Alternatively, download the zip from
-<https://github.com/leblangi/moodle-tool_removeoldcourses/archive/master.zip>,
-unzip it into the local folder, and then rename the new folder to "removeoldcourses".
+<https://github.com/leblangi/moodle-tool_oldcoursesremoval/archive/master.zip>,
+unzip it into the local folder, and then rename the new folder to "oldcoursesremoval".
 
 After you have installed this admin tool plugin, you
 should see a new option in the settings block:
