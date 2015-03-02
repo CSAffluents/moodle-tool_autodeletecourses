@@ -18,9 +18,8 @@
  * Lib functions (cron) to automatically complete the question engine upgrade
  * if it was not done all at once during the main upgrade.
  *
- * @package    tool
- * @subpackage oldcoursesremoval
- * @copyright  2011 The Open University
+ * @package    tool_oldcoursesremoval
+ * @copyright  2015 Gilles-Philippe Leblanc
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

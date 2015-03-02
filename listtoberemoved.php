@@ -15,45 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Script to show all the assignments that have not been upgraded after the main upgrade.
+ * Script to show all the eligible courses to be removed.
  *
- * @package    tool_assignmentupgrade
- * @copyright  2012 NetSpot
+ * @package    tool_oldcoursesremoval
+ * @copyright  2015 Gilles-Philippe Leblanc
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once(dirname(__FILE__) . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
-require_once($CFG->dirroot . '/'.$CFG->admin.'/tool/assignmentupgrade/locallib.php');
-require_once($CFG->dirroot . '/'.$CFG->admin.'/tool/assignmentupgrade/upgradableassignmentstable.php');
-require_once($CFG->dirroot . '/'.$CFG->admin.'/tool/assignmentupgrade/upgradableassignmentsbatchform.php');
-require_once($CFG->dirroot . '/'.$CFG->admin.'/tool/assignmentupgrade/paginationform.php');
+
+$plugin = new tool_oldcoursesremoval_base();
 
 // This calls require_login and checks moodle/site:config.
-admin_externalpage_setup('assignmentupgrade', '', array(), tool_assignmentupgrade_url('listnotupgraded'));
-$PAGE->navbar->add(get_string('listnotupgraded', 'tool_assignmentupgrade'));
+admin_externalpage_setup('tool_oldcoursesremoval_list');
 
-$renderer = $PAGE->get_renderer('tool_assignmentupgrade');
+$renderer = $PAGE->get_renderer('tool_oldcoursesremoval');
 
 $perpage = optional_param('perpage', 0, PARAM_INT);
 if (!$perpage) {
-    $perpage = get_user_preferences('tool_assignmentupgrade_perpage', 100);
+    $perpage = get_user_preferences('tool_oldcoursesremoval_perpage', 100);
 } else {
-    set_user_preference('tool_assignmentupgrade_perpage', $perpage);
+    set_user_preference('tool_oldcoursesremoval_perpage', $perpage);
 }
-$assignments = new tool_assignmentupgrade_assignments_table($perpage);
-
-$batchform = new tool_assignmentupgrade_batchoperations_form();
-$data = $batchform->get_data();
-
-if ($data && $data->selectedassignments != '' || $data && isset($data->upgradeall)) {
-    require_sesskey();
-    echo $renderer->confirm_batch_operation_page($data);
-} else {
-    $paginationform = new tool_assignmentupgrade_pagination_form();
-    $pagedata = new stdClass();
-    $pagedata->perpage = $perpage;
-    $paginationform->set_data($pagedata);
-    echo $renderer->assignment_list_page($assignments, $batchform, $paginationform);
-}
-
+$courses = new tool_oldcoursesremoval_courses_table($perpage);
+$paginationform = new tool_oldcoursesremoval_pagination_form();
+$pagedata = new stdClass();
+$pagedata->perpage = $perpage;
+$paginationform->set_data($pagedata);
+echo $renderer->course_list_page($courses, $paginationform);

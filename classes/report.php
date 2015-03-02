@@ -35,7 +35,7 @@ require_once(dirname(__FILE__) . '/../../../../config.php');
  * @copyright  2015 Gilles-Philippe Leblanc
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_dbgradeimport_report extends tool_dbgradeimport_base {
+class tool_oldcoursesremoval_report extends tool_oldcoursesremoval_base {
 
     public function add_status($status, $course) {
 

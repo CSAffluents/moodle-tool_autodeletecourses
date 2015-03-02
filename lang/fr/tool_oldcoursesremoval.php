@@ -22,11 +22,31 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['coursesperpage'] = 'Cours par page';
 $string['cronenabled'] = 'Cron activé';
-$string['croninstructions'] = 'You can enable cron to automatically remove old courses based on some criterias. Cron will run between set hours on the day (according to server local time). Each time cron runs, it will process a number of removals until Time limit amount of time has been used, then it will stop and wait for the next cron run.';
-$string['cronprocesingtime'] = 'Le temps de traitement de chaqu\'un es cron';
-$string['cronsetup'] = 'Configurer le cron';
-$string['cronsetup_desc'] = 'You can configure cron to complete the upgrade of quiz attempt data automatically.';
-$string['cronstarthour'] = 'Heure de départ';
-$string['cronstophour'] = 'Heure de fin';
-$string['pluginname'] = 'Retrait automatique de vieux cours';
+$string['cronenabled_desc'] = 'Cochez cette case si vous souhaitez traiter la suppression des anciens cours avec le cron du système.';
+$string['croninstructions'] = 'Vous pouvez activer le cron pour supprimer de vieux espaces cours basé sur certains critères. Le cron va fonctionner durant une plage horaire définie (en phase avec le réglage local du serveur). Chaque fois que le cron fonctionne, il va traiter la suppression des cours jusqu\'à ce que le temps limite soit épuisé, puis stoppera et attendra la prochaine exécution.';
+$string['cronprocessingtime'] = 'Temps de fonctionnement';
+$string['cronprocessingtime_desc'] = 'Le temps de fonctionnement à chaque lancement de cron..';
+$string['cronsetupheader'] = 'Configurer le cron';
+$string['cronsetupheader_desc'] = 'Vous pouvez configurer le cron pour supprimer de vieux espaces cours basé sur certains critères.';
+$string['cronstarttime'] = 'Temps de démarrage';
+$string['cronstarttime_desc'] = 'Le temps de la journée où le cron commencera à être disponible pour la suppression.';
+$string['cronstoptime'] = 'Temps de fin';
+$string['cronstoptime_desc'] = 'Le temps de la journée où le cron arrêtera d\'être disponible pour la suppression.';
+$string['description'] = 'Cet outil d\'administration permet de supprimer les anciens cours en fonction de nombreux critères comme la visibilité de cours, la date de création ou si le cours a été modifié.';
+$string['editsettings'] = 'Modifier les réglages';
+$string['pluginname'] = 'Suppression automatique de vieux cours';
+$string['removeonlyinvisible'] = 'Supprimer seulement les cours non visibles';
+$string['removeonlyinvisible_desc'] = 'Cochez cette case si vous souhaitez supprimer seulement les cours non visibles.';
+$string['removeonlynotmodified'] = 'Supprimer seulement les cours non modifiés';
+$string['removeonlynotmodified_desc'] = 'Cochez cette case si vous souhaitez supprimer seulement les cours non modifiés.';
+$string['removeonlyolderthan'] = 'Supprimer seulement les cours plus vieux que';
+$string['removeonlyolderthan_desc'] = 'Seul les cours plus vieux que cette durée seront supprimés.';
+$string['sendemail'] = 'Envoyer un courriel aux administrateurs';
+$string['sendemail_desc'] = 'Cochez cette case pour envoyer un courriel à tous les administrateurs chaque fois qu\'un traitement se termine.';
+$string['settings'] = 'Réglages';
+$string['showelligiblecourses'] = 'Afficher les cours admissibles';
+$string['showelligiblecourses_desc'] = 'Affiche la liste de tous les cours qui sont admissibles à la suppression. Cela vous permet de faire une vérification avant de lancer le processus.';
+$string['updatetable'] = 'Update table';
+

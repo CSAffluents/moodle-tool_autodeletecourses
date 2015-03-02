@@ -15,43 +15,46 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file contains the forms to create and edit an instance of this module
+ * This file contains the pagination form to show a list of eligible courses to be removed.
+
  *
- * @package   tool_assignmentupgrade
- * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    tool_oldcoursesremoval
+ * @copyright  2015 Gilles-Philippe Leblanc
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die('Direct access to this script is forbidden.');
 
-require_once($CFG->libdir.'/formslib.php');
+require_once($CFG->libdir . '/formslib.php');
 
 /**
- * Assignment upgrade table display options
+ * The pagination form of the list of iligible courses to be removed.
  *
- * @package   tool_assignmentupgrade
- * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    tool_oldcoursesremoval
+ * @copyright  2015 Gilles-Philippe Leblanc
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_assignmentupgrade_pagination_form extends moodleform {
+class tool_oldcoursesremoval_pagination_form extends moodleform {
+
     /**
      * Define this form - called from the parent constructor
      */
     public function definition() {
         $mform = $this->_form;
-        $instance = $this->_customdata;
 
-        $mform->addElement('header', 'general', get_string('assignmentsperpage', 'tool_assignmentupgrade'));
+        $plugin = new tool_oldcoursesremoval_base();
+
+        $mform->addElement('header', 'general', $plugin->get_string('coursesperpage'));
         // Visible elements.
-        $options = array(10=>'10', 20=>'20', 50=>'50', 100=>'100');
-        $mform->addElement('select', 'perpage', get_string('assignmentsperpage', 'assign'), $options);
+        $options = array(10 => '10', 20 => '20', 50 => '50', 100 => '100', 250 => '250', 500 => '500');
+        $mform->addElement('select', 'perpage', $plugin->get_string('coursesperpage'), $options);
 
         // Hidden params.
         $mform->addElement('hidden', 'action', 'saveoptions');
         $mform->setType('action', PARAM_ALPHA);
 
         // Buttons.
-        $this->add_action_buttons(false, get_string('updatetable', 'tool_assignmentupgrade'));
+        $this->add_action_buttons(false, $plugin->get_string('updatetable'));
     }
 }
 

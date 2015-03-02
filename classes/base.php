@@ -35,7 +35,7 @@ require_once(dirname(__FILE__) . '/../../../../config.php');
  * @copyright  2015 Gilles-Philippe Leblanc
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_dbgradeimport_base {
+class tool_oldcoursesremoval_base {
 
     /**
      * @var The name of this plugin.
@@ -44,6 +44,7 @@ class tool_dbgradeimport_base {
 
     /**
      * Returns plugin config value
+     * 
      * @param  string $name The name of the config to retrieve.
      * @return mixed hash-like object or single value, return false no config found.
      */
@@ -53,6 +54,7 @@ class tool_dbgradeimport_base {
 
     /**
      * Sets plugin config value
+     *
      * @param  string $name name of config
      * @param  string $value string config value, null means delete
      * @return string value
@@ -63,6 +65,7 @@ class tool_dbgradeimport_base {
 
     /**
      * Returns a localized string for this plugin.
+     *
      * @param string $identifier The key identifier for the localized string
      * @param string|object|array $a An object, string or number that can be used
      *      within translation strings
@@ -74,6 +77,7 @@ class tool_dbgradeimport_base {
     
     /**
      * Get the URL of a script within this plugin.
+     *
      * @param string $script the script name, without .php. E.g. 'index'
      * @param array $params URL parameters (optional)
      * @return moodle_url

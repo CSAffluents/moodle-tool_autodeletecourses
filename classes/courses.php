@@ -29,23 +29,31 @@ defined('MOODLE_INTERNAL') || die();
 require_once(dirname(__FILE__) . '/../../../../config.php');
 
 /**
- * Old courses removal remover class.
+ * Old courses removal courses class.
  *
  * @package    tool_oldcoursesremoval
  * @copyright  2015 Gilles-Philippe Leblanc
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_oldcoursesremoval_remover extends tool_oldcoursesremoval_base {
+class tool_oldcoursesremoval_courses extends tool_oldcoursesremoval_base {
 
-    public function has_removeable_courses() {
+    /**
+     * @var int The current time the instance is created.
+     */
+    private $currentime = null;
+
+    /**
+     * The constructor of the class.
+     */
+    public function __construct() {
+        $this->currentime = time();
+    }
+
+    public function get_sql() {
         
     }
 
-    public function get_removeable_courses() {
-
-    }
-
-    public function remove_courses() {
+    public function get_sql_count() {
 
     }
 

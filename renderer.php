@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines the renderer for the assignment upgrade helper plugin.
+ * Defines the renderer for the old courses removal plugin.
  *
- * @package    tool_assignmentupgrade
+ * @package    tool_oldcoursesremoval
  * @copyright  2012 NetSpot
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,169 +25,43 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Renderer for the assignment upgrade helper plugin.
+ * Renderer for the old courses removal plugin.
  *
- * @package    tool_assignmentupgrade
+ * @package    tool_oldcoursesremoval
  * @copyright  2012 NetSpot
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_assignmentupgrade_renderer extends plugin_renderer_base {
+class tool_oldcoursesremoval_renderer extends plugin_renderer_base {
 
     /**
-     * Render the index page.
-     * @param string $detected information about what sort of site was detected.
-     * @param array $actions list of actions to show on this page.
+     * Render the list of all the eligible courses to be removed page.
+     * @param tool_oldcoursesremoval_courses_table $courses a list of eligible courses to be removed.
+     * @param tool_oldcoursesremoval_pagination_form $paginationform Form which contains the preferences for paginating the table
      * @return string html to output.
      */
-    public function index_page($detected, array $actions) {
+    public function course_list_page(tool_oldcoursesremoval_courses_table $courses,
+            tool_oldcoursesremoval_pagination_form $paginationform) {
+
+        $plugin = new tool_oldcoursesremoval_base();
+
         $output = '';
         $output .= $this->header();
-        $output .= $this->heading(get_string('pluginname', 'tool_assignmentupgrade'));
-        $output .= $this->box($detected);
-        $output .= html_writer::start_tag('ul');
-        foreach ($actions as $action) {
-            $output .= html_writer::tag('li',
-                    html_writer::link($action->url, $action->name) . ' - ' .
-                    $action->description);
-        }
-        $output .= html_writer::end_tag('ul');
-        $output .= $this->footer();
-        return $output;
-    }
+        $this->page->requires->js_init_call('M.tool_oldcoursesremoval.init_course_table', array());
 
-    /**
-     * Render a page that is just a simple message.
-     * @param string $message the message to display.
-     * @return string html to output.
-     */
-    public function simple_message_page($message) {
-        $output = '';
-        $output .= $this->header();
-        $output .= $this->heading($message);
-        $output .= $this->back_to_index();
-        $output .= $this->footer();
-        return $output;
-    }
-
-    /**
-     * Render the confirm batch operation page
-     * @param stdClass $data Submitted form data with list of assignments to upgrade
-     * @return string html to output.
-     */
-    public function confirm_batch_operation_page(stdClass $data) {
-        $output = '';
-        $output .= $this->header();
-
-        $output .= $this->heading(get_string('confirmbatchupgrade', 'tool_assignmentupgrade'));
+        $output .= $this->heading($plugin->get_string('showelligiblecourses'));
+        $output .= $this->box($plugin->get_string('showelligiblecourses'));
         $output .= $this->output->spacer(array(), true);
 
-        $output .= $this->container_start('tool_assignmentupgrade_confirmbatch');
+        $output .= $this->container_start('tool_oldcoursesremoval_removetable');
 
-        $output .= $this->render(new tool_assignmentupgrade_batchoperationconfirm($data));
-        $output .= $this->container_end();
-
-        $output .= $this->back_to_index();
-        $output .= $this->footer();
-        return $output;
-    }
-
-    /**
-     * Render the confirm batch continue / cancel links
-     * @param tool_assignmentupgrade_batchoperationconfirm $confirm Wrapper class to determine the continue message and url
-     * @return string html to output.
-     */
-    public function render_tool_assignmentupgrade_batchoperationconfirm(tool_assignmentupgrade_batchoperationconfirm $confirm) {
-        $output = '';
-
-        if ($confirm->continueurl) {
-            $output .= $this->output->confirm($confirm->continuemessage,
-                                              $confirm->continueurl,
-                                              tool_assignmentupgrade_url('listnotupgraded'));
-        } else {
-            $output .= $this->output->box($confirm->continuemessage);
-            $output .= $this->output->continue_button(tool_assignmentupgrade_url('listnotupgraded'));
-        }
-        return $output;
-    }
-
-    /**
-     * Render the list of assignments that still need to be upgraded page.
-     * @param tool_assignmentupgrade_assignments_table $assignments of data about assignments.
-     * @param tool_assignmentupgrade_batchoperations_form $batchform Submitted form with list of assignments to upgrade
-     * @param tool_assignmentupgrade_pagination_form $paginationform Form which contains the preferences for paginating the table
-     * @return string html to output.
-     */
-    public function assignment_list_page(tool_assignmentupgrade_assignments_table $assignments,
-                                         tool_assignmentupgrade_batchoperations_form $batchform,
-                                         tool_assignmentupgrade_pagination_form $paginationform) {
-        $output = '';
-        $output .= $this->header();
-        $this->page->requires->js_init_call('M.tool_assignmentupgrade.init_upgrade_table', array());
-        $this->page->requires->string_for_js('noassignmentsselected', 'tool_assignmentupgrade');
-
-        $output .= $this->heading(get_string('notupgradedtitle', 'tool_assignmentupgrade'));
-        $output .= $this->box(get_string('notupgradedintro', 'tool_assignmentupgrade'));
-        $output .= $this->output->spacer(array(), true);
-
-        $output .= $this->container_start('tool_assignmentupgrade_upgradetable');
-
-        $output .= $this->container_start('tool_assignmentupgrade_paginationform');
+        $output .= $this->container_start('tool_oldcoursesremoval_paginationform');
         $output .= $this->moodleform($paginationform);
         $output .= $this->container_end();
 
-        $output .= $this->flexible_table($assignments, $assignments->get_rows_per_page(), true);
+        $output .= $this->flexible_table($courses, $courses->get_rows_per_page(), true);
         $output .= $this->container_end();
 
-        if ($assignments->anyupgradableassignments) {
-            $output .= $this->container_start('tool_assignmentupgrade_batchform');
-            $output .= $this->moodleform($batchform);
-            $output .= $this->container_end();
-        }
-
-        $output .= $this->back_to_index();
-        $output .= $this->footer();
-        return $output;
-    }
-
-    /**
-     * Render the result of an assignment conversion
-     * @param stdClass $assignmentsummary data about the assignment to upgrade.
-     * @param bool $success Set to true if the outcome of the conversion was a success
-     * @param string $log The log from the conversion
-     * @return string html to output.
-     */
-    public function convert_assignment_result($assignmentsummary, $success, $log) {
-        $output = '';
-
-        $output .= $this->container_start('tool_assignmentupgrade_result');
-        $output .= $this->container(get_string('upgradeassignmentsummary', 'tool_assignmentupgrade', $assignmentsummary));
-        if (!$success) {
-            $output .= $this->container(get_string('conversionfailed', 'tool_assignmentupgrade', $log));
-        } else {
-            $output .= $this->container(get_string('upgradeassignmentsuccess', 'tool_assignmentupgrade'));
-            $url = new moodle_url('/course/view.php', array('id'=>$assignmentsummary->courseid));
-            $output .= $this->container(html_writer::link($url, get_string('viewcourse', 'tool_assignmentupgrade')));
-        }
-        $output .= $this->container_end();
-
-        return $output;
-    }
-
-    /**
-     * Render the are-you-sure page to confirm a manual upgrade.
-     * @param stdClass $assignmentsummary data about the assignment to upgrade.
-     * @return string html to output.
-     */
-    public function convert_assignment_are_you_sure($assignmentsummary) {
-        $output = '';
-        $output .= $this->header();
-        $output .= $this->heading(get_string('areyousure', 'tool_assignmentupgrade'));
-
-        $params = array('id' => $assignmentsummary->id, 'confirmed' => 1, 'sesskey' => sesskey());
-        $output .= $this->confirm(get_string('areyousuremessage', 'tool_assignmentupgrade', $assignmentsummary),
-                new single_button(tool_assignmentupgrade_url('upgradesingle', $params), get_string('yes')),
-                tool_assignmentupgrade_url('listnotupgraded'));
-
+        $output .= $this->edit_settings();
         $output .= $this->footer();
         return $output;
     }
@@ -240,10 +114,12 @@ class tool_assignmentupgrade_renderer extends plugin_renderer_base {
     }
 
     /**
-     * Output a link back to the plugin index page.
+     * Output a link back to the plugin settings page.
      * @return string html to output.
      */
-    public function back_to_index() {
-        return $this->end_of_page_link(tool_assignmentupgrade_url('index'), get_string('backtoindex', 'tool_assignmentupgrade'));
+    public function edit_settings() {
+        $plugin = new tool_oldcoursesremoval_base();
+        $url = new moodle_url('settings.php', array('section' => 'tool_oldcoursesremoval'));
+        return $this->end_of_page_link($url, $plugin->get_string('editsettings'));
     }
 }
