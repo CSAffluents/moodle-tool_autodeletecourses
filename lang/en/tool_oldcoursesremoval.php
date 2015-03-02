@@ -23,6 +23,7 @@
  */
 
 $string['coursesperpage'] = 'Courses per page';
+$string['createdsince'] = 'Create since';
 $string['cronenabled'] = 'Cron enabled';
 $string['cronenabled_desc'] = 'Check this if you want to process the removal of the old courses with the system cron.';
 $string['croninstructions'] = 'You can enable cron to automatically remove old courses based on some criterias. Cron will run between set hours on the day (according to server local time). Each time cron runs, it will process a number of removals until Time limit amount of time has been used, then it will stop and wait for the next cron run.';

@@ -23,6 +23,7 @@
  */
 
 $string['coursesperpage'] = 'Cours par page';
+$string['createdsince'] = 'Créé depuis';
 $string['cronenabled'] = 'Cron activé';
 $string['cronenabled_desc'] = 'Cochez cette case si vous souhaitez traiter la suppression des anciens cours avec le cron du système.';
 $string['croninstructions'] = 'Vous pouvez activer le cron pour supprimer de vieux espaces cours basé sur certains critères. Le cron va fonctionner durant une plage horaire définie (en phase avec le réglage local du serveur). Chaque fois que le cron fonctionne, il va traiter la suppression des cours jusqu\'à ce que le temps limite soit épuisé, puis stoppera et attendra la prochaine exécution.';

@@ -62,6 +62,7 @@ class tool_oldcoursesremoval_courses_table extends table_sql implements renderab
         parent::__construct('tool_oldcoursesremoval_courses');
         $this->perpage = $perpage;
         $this->output = $PAGE->get_renderer('tool_oldcoursesremoval');
+        $this->collapsible(false);
 
         $plugin = new tool_oldcoursesremoval_base();
 
@@ -72,7 +73,8 @@ class tool_oldcoursesremoval_courses_table extends table_sql implements renderab
             $this->rownum = $rowoffset - 1;
         }
 
-        $fields = 'c.id as id, c.shortname as shortnamecourse, c.fullname as fullnamecourse';
+        $fields = 'c.id as id, c.shortname as shortnamecourse, c.fullname as fullnamecourse, c.visible as visible, ' .
+                'c.timecreated as timecreated';
         $from = 'mdl_course c';
         $where = 'c.visible = 0';
 
@@ -88,6 +90,10 @@ class tool_oldcoursesremoval_courses_table extends table_sql implements renderab
         $headers[] = get_string('shortnamecourse');
         $columns[] = 'fullnamecourse';
         $headers[] = get_string('fullnamecourse');
+        $columns[] = 'visible';
+        $headers[] = get_string('visible');
+        $columns[] = 'timecreated';
+        $headers[] = $plugin->get_string('createdsince');
 
         // Set the columns.
         $this->define_columns($columns);
@@ -112,5 +118,29 @@ class tool_oldcoursesremoval_courses_table extends table_sql implements renderab
     public function col_fullnamecourse(stdClass $row) {
         $url = new moodle_url('/course/view.php', array('id' => $row->id));
         return html_writer::link($url, $row->fullnamecourse, array('title' => $row->fullnamecourse));
+    }
+
+    /**
+     * Format the visible column.
+     *
+     * @param stdClass $row
+     * @return string
+     */
+    public function col_visible(stdClass $row) {
+        if (empty($row->visible)) {
+            return get_string('no');
+        } else {
+            return get_string('yes');
+        }
+    }
+
+    /**
+     * Format the visible column.
+     *
+     * @param stdClass $row
+     * @return string
+     */
+    public function col_timecreated(stdClass $row) {
+        return format_time(time() - $row->timecreated);
     }
 }
