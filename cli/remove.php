@@ -27,14 +27,11 @@
 define('CLI_SCRIPT', true);
 
 require_once(dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/config.php');
-require_once(dirname(dirname(__FILE__)) . '/locallib.php');
-require_once(dirname(dirname(__FILE__)) . '/lib.php');
-require_once($CFG->libdir.'/clilib.php');      // CLI only functions.
-
+require_once($CFG->libdir . '/clilib.php');      // CLI only functions.
 
 // Now get cli options.
-list($options, $unrecognized) = cli_get_params(array('quiz'=>false, 'timelimit'=>false, 'countlimit'=>false, 'help'=>false),
-                                               array('c'=>'countlimit', 't'=>'timelimit', 'h'=>'help'));
+list($options, $unrecognized) = cli_get_params(array('course' => false, 'timelimit' => false, 'countlimit' => false, 'help' => false),
+                                               array('c' => 'countlimit', 't' => 'timelimit', 'h' => 'help'));
 
 if ($unrecognized) {
     $unrecognized = implode("\n  ", $unrecognized);
@@ -44,14 +41,13 @@ if ($unrecognized) {
 
 if ($options['help']) {
     $help =
-"Question engine upgrade helper CLI tool.
-Will upgrade all remaining question attempts if no options are specified.
+"Old courses removal CLI tool.
+Will remove all courses based on criterias in the settings if no options are specified.
 
 Options:
--c, --countlimit=<n>    Process n number of quizzes then exit
--t, --timelimit=<n>     Process quizzes for n number of seconds, then exit. A quiz
-                        currently in progress will not be interrupted.
---quiz=<quizid>         Process quiz quizid only
+-c, --countlimit=<n>    Process n number of courses then exit
+-t, --timelimit=<n>     Process courses for n number of seconds, then exit.
+--course=<courseid>     Process quiz quizid only
 -h, --help              Print out this help
 
 countlimit and timelimit can be used together. First one to trigger will stop execution.
@@ -64,17 +60,6 @@ Example:
     die;
 }
 
-
-
-
-if (!tool_oldcoursesremoval_is_upgraded()) {
-    mtrace('oldcoursesremoval: site not yet upgraded. Doing nothing.');
-    return;
-}
-
-require_once(dirname(dirname(__FILE__)) . '/afterupgradelib.php');
-
-
 $starttime = time();
 
 // Setup the stop time.
@@ -84,8 +69,8 @@ if ($options['timelimit']) {
     $stoptime = false;
 }
 
-// If we are doing a quiz id, limit to one.
-if ($options['quiz']) {
+// If we are doing a course id, limit to one.
+if ($options['course']) {
     $options['countlimit'] = 1;
 }
 
@@ -94,37 +79,40 @@ $count = 0;
 
 mtrace('oldcoursesremoval: processing ...');
 
+$plugin = new tool_oldcoursesremoval_courses_remover();
+
 /* This while statement does a few things
  * Basically if an option is set to false, then that subsection will return
  * true, and will short circuit the test condition for that option, and always
- * being true. Both options are anded together, so either one can trigger to stop.
+ * being true. Both options are handed together, so either one can trigger to stop.
  */
 while ((!$stoptime || (time() < $stoptime)) && (!$options['countlimit'] || ($count < $options['countlimit']))) {
-    if ($options['quiz']) {
-        $quizid = $options['quiz'];
+    if ($options['course']) {
+        $courseid = $options['course'];
     } else {
-        $quiz = tool_oldcoursesremoval_get_quiz_for_upgrade();
-        if (!$quiz) {
-            mtrace('oldcoursesremoval: No more quizzes to process.');
-            break; // No more to do.
+        $course = $plugin->get_course_to_remove();
+        if (!$course) {
+            mtrace('oldcoursesremoval: No more course to remove.');
+            break; // No more to do;
         }
 
-        $quizid = $quiz->id;
+        $courseid = $course->id;
     }
-    $quizsummary = tool_oldcoursesremoval_get_quiz($quizid);
-    if ($quizsummary) {
-        mtrace('  starting upgrade of attempts at quiz ' . $quizid);
-        $upgrader = new tool_oldcoursesremoval_attempt_upgrader(
-                $quizsummary->id, $quizsummary->numtoconvert);
-        $upgrader->convert_all_quiz_attempts();
-        mtrace('  upgrade of quiz ' . $quizid . ' complete.');
+    $course = tool_oldcoursesremoval_get_quiz($courseid);
+    if ($course) {
+        mtrace('  starting the remove of the course ' . $course->id);
+        if ($plugin->remove_course($course)) {
+            mtrace('  remove of course ' . $course->id . ' complete.');
+        } else {
+            mtrace('  remove of course ' . $course->id . ' incomplete.');
+        }
     } else {
-        mtrace('quiz ' . $quizid . ' not found or already upgraded.');
+        mtrace('course ' . $courseid . ' not found or already deleted.');
     }
 
     $count++;
 }
 
 
-mtrace('oldcoursesremoval: Done. Processed '.$count.' quizes in '.(time()-$starttime).' seconds');
+mtrace('oldcoursesremoval: Done. Processed ' . $count . ' courses in '.(time() - $starttime).' seconds');
 return;

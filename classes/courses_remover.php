@@ -37,43 +37,34 @@ require_once(dirname(__FILE__) . '/../../../../config.php');
  */
 class tool_oldcoursesremoval_courses_remover extends tool_oldcoursesremoval_courses {
 
-
-    private $index = null;
-
-    private $coursesid = null;
-
     /**
-     * The constructor of the class.
-     */
-    public function __construct() {
-        parent::__construct();
-        $this->coursesid = $this->get_coursesid();
-        $this->index = 0;
-    }
-
-    /**
-     * Get the id from the removeable courses.
+     * Remove the specified course.
      *
-     * @return string The courses id.
+     * @param stdClass $course The course object.
+     * @return if the remove whas successful or not.
      */
-    private function get_coursesid() {
+    public function remove_course($course) {
+        return delete_course($course);
+    }
+
+    /**
+     * Get the next course from the removeable courses.
+     *
+     * @return string The next course to be removed.
+     */
+    public function get_course_to_remove() {
         global $DB;
-        $coursesid = array();
         $sql = "SELECT DISTINCT " . self::CID . ".id FROM " . $this->get_sql_from() . " WHERE " . $this->get_sql_where();
-        if ($courses = $DB->get_records_sql($sql)) {
-            foreach($courses as $course) {
-                $coursesid[] = $course->id;
-            }
-        }
-        return $coursesid;
+        return $DB->get_records_sql($sql, array(), IGNORE_MULTIPLE);
     }
 
-    public function remove_course() {
-
+    /**
+     * Get the course infos required for report and for the remove.
+     *
+     * @return string The next course to be removed.
+     */
+    public function get_course_infos($courseid) {
+        global $DB;
+        return $DB->get_record('course', array('id' => $courseid), 'id,shortname,fullname,idnumber');
     }
-
-    public function get_course_id() {
-
-    }
-    
 }

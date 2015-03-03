@@ -57,23 +57,25 @@ function tool_oldcoursesremoval_process($settings) {
 
     $stoptime = time() + $settings->processingtime;
 
+    $plugin = new tool_oldcoursesremoval_courses_remover();
+
     mtrace('oldcoursesremoval: processing ...');
     while (time() < $stoptime) {
 
-        $quiz = tool_oldcoursesremoval_get_quiz_for_upgrade();
-        if (!$quiz) {
-            mtrace('oldcoursesremoval: No more quizzes to process. You should probably disable the oldcoursesremoval cron settings now.');
+        $course = $plugin->get_course_to_remove();
+        if (!$course) {
+            mtrace('oldcoursesremoval: No more course to remove.');
             break; // No more to do;
         }
 
-        $quizid = $quiz->id;
-        $quizsummary = tool_oldcoursesremoval_get_quiz($quizid);
-        if ($quizsummary) {
-            mtrace('  starting upgrade of attempts at quiz ' . $quizid);
-            $upgrader = new tool_oldcoursesremoval_attempt_upgrader(
-                    $quizsummary->id, $quizsummary->numtoconvert);
-            $upgrader->convert_all_quiz_attempts();
-            mtrace('  upgrade of quiz ' . $quizid . ' complete.');
+        $course = $plugin->get_course_infos($course->id);
+        if ($course) {
+            mtrace('  starting the remove of the course ' . $course->id);
+            if ($plugin->remove_course($course)) {
+                mtrace('  remove of course ' . $course->id . ' complete.');
+            } else {
+                mtrace('  remove of course ' . $course->id . ' incomplete.');
+            }
         }
     }
 
