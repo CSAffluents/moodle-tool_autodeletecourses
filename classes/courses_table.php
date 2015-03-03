@@ -25,8 +25,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir.'/tablelib.php');
-require_once($CFG->libdir.'/gradelib.php');
-require_once($CFG->dirroot.'/mod/assign/locallib.php');
 
 /**
  * Extends table_sql to provide a table of removeable courses.
@@ -38,26 +36,29 @@ require_once($CFG->dirroot.'/mod/assign/locallib.php');
 class tool_oldcoursesremoval_courses_table extends table_sql implements renderable {
 
     /**
-     * @var int $perpage
+     * @var int $perpage The number of courses per page.
      */
     private $perpage = 10;
 
     /**
-     * @var int $rownum (global index of current row in table)
+     * @var int $rownum (global index of current row in table).
      */
     private $rownum = -1;
 
     /** @var renderer_base for getting output */
     private $output = null;
 
+    private $count = null;
+
     /**
      * This table loads a list of the old assignment instances and tests them to see
      * if they can be upgraded
      *
-     * @param int $perpage How many per page
-     * @param int $rowoffset The starting row for pagination
+     * @params tool_oldcoursesremoval_courses $courses The courses to be removed object.
+     * @param int $perpage How many per page.
+     * @param int $rowoffset The starting row for pagination.
      */
-    public function __construct($perpage, $rowoffset = 0) {
+    public function __construct(tool_oldcoursesremoval_courses $courses, $perpage, $rowoffset = 0) {
         global $PAGE;
         parent::__construct('tool_oldcoursesremoval_courses');
         $this->perpage = $perpage;
@@ -73,26 +74,29 @@ class tool_oldcoursesremoval_courses_table extends table_sql implements renderab
             $this->rownum = $rowoffset - 1;
         }
 
-        $fields = 'c.id as id, c.shortname as shortnamecourse, c.fullname as fullnamecourse, c.visible as visible, ' .
-                'c.timecreated as timecreated';
-        $from = 'mdl_course c';
-        $where = 'c.visible = 0';
+        $this->count = $courses->get_count();
 
-        $this->set_sql($fields, $from, $where, array());
+        $fields = array(
+            'id' => 'id',
+            'shortname' => 'shortnamecourse',
+            'fullname' => 'fullnamecourse',
+            'visible' => 'visible',
+            'timecreated' => 'timecreated',
+        );
 
-        $columns = array();
+        $from = $courses->get_sql_from();
+        $where = $courses->get_sql_where();
+
+        $this->set_sql($courses->format_sql_fields($fields), $from, $where, array());
+        $this->set_count_sql($courses->get_sql_count());
+
+        $columns = array_values($fields);
+
         $headers = array();
-
-        
-        $columns[] = 'id';
-        $headers[] = get_string('course');
-        $columns[] = 'shortnamecourse';
+        $headers[] = $plugin->get_string('courseid');
         $headers[] = get_string('shortnamecourse');
-        $columns[] = 'fullnamecourse';
         $headers[] = get_string('fullnamecourse');
-        $columns[] = 'visible';
         $headers[] = get_string('visible');
-        $columns[] = 'timecreated';
         $headers[] = $plugin->get_string('createdsince');
 
         // Set the columns.
@@ -101,9 +105,18 @@ class tool_oldcoursesremoval_courses_table extends table_sql implements renderab
     }
 
     /**
-     * Return the number of rows to display on a single page
+     * Return the number of courses.
      *
-     * @return int The number of rows per page
+     * @return int The number of courses.
+     */
+    public function get_count() {
+        return $this->count;
+    }
+
+    /**
+     * Return the number of rows to display on a single page.
+     *
+     * @return int The number of rows per page.
      */
     public function get_rows_per_page() {
         return $this->perpage;
@@ -112,8 +125,8 @@ class tool_oldcoursesremoval_courses_table extends table_sql implements renderab
     /**
      * Format a link to the course page.
      *
-     * @param stdClass $row
-     * @return string
+     * @param stdClass $row The row object.
+     * @return string The formatted output.
      */
     public function col_fullnamecourse(stdClass $row) {
         $url = new moodle_url('/course/view.php', array('id' => $row->id));
@@ -123,22 +136,22 @@ class tool_oldcoursesremoval_courses_table extends table_sql implements renderab
     /**
      * Format the visible column.
      *
-     * @param stdClass $row
-     * @return string
+     * @param stdClass $row The row object.
+     * @return string The formatted output.
      */
     public function col_visible(stdClass $row) {
+        $output = get_string('yes');
         if (empty($row->visible)) {
-            return get_string('no');
-        } else {
-            return get_string('yes');
+            $output = get_string('no');
         }
+        return $output;
     }
 
     /**
      * Format the visible column.
      *
-     * @param stdClass $row
-     * @return string
+     * @param stdClass $row The row object.
+     * @return string The formatted output.
      */
     public function col_timecreated(stdClass $row) {
         return format_time(time() - $row->timecreated);

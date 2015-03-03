@@ -18,7 +18,7 @@
  * Defines the renderer for the old courses removal plugin.
  *
  * @package    tool_oldcoursesremoval
- * @copyright  2012 NetSpot
+ * @copyright  2015 Gilles-Philippe Leblanc
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,18 +28,35 @@ defined('MOODLE_INTERNAL') || die();
  * Renderer for the old courses removal plugin.
  *
  * @package    tool_oldcoursesremoval
- * @copyright  2012 NetSpot
+ * @copyright  2015 Gilles-Philippe Leblanc
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class tool_oldcoursesremoval_renderer extends plugin_renderer_base {
 
     /**
+     * Render a page that is just a simple message.
+     *
+     * @param string $title The title of this page.
+     * @param string $message The message to display.
+     * @return string html to output.
+     */
+    public function simple_message_page($title, $message) {
+        $output = '';
+        $output .= $this->header();
+        $output .= $this->heading($title);
+        $output .= $message;
+        $output .= $this->edit_settings();
+        $output .= $this->footer();
+        return $output;
+    }
+
+    /**
      * Render the list of all the eligible courses to be removed page.
-     * @param tool_oldcoursesremoval_courses_table $courses a list of eligible courses to be removed.
+     * @param tool_oldcoursesremoval_courses_table $table a list of eligible courses to be removed.
      * @param tool_oldcoursesremoval_pagination_form $paginationform Form which contains the preferences for paginating the table
      * @return string html to output.
      */
-    public function course_list_page(tool_oldcoursesremoval_courses_table $courses,
+    public function course_list_page(tool_oldcoursesremoval_courses_table $table,
             tool_oldcoursesremoval_pagination_form $paginationform) {
 
         $plugin = new tool_oldcoursesremoval_base();
@@ -49,7 +66,8 @@ class tool_oldcoursesremoval_renderer extends plugin_renderer_base {
         $this->page->requires->js_init_call('M.tool_oldcoursesremoval.init_course_table', array());
 
         $output .= $this->heading($plugin->get_string('showelligiblecourses'));
-        $output .= $this->box($plugin->get_string('showelligiblecourses'));
+        $output .= html_writer::tag('p', $plugin->get_string('showelligiblecourses_desc'));
+        $output .= html_writer::tag('p', $plugin->get_string('matchingcourses', $table->get_count()));
         $output .= $this->output->spacer(array(), true);
 
         $output .= $this->container_start('tool_oldcoursesremoval_removetable');
@@ -58,7 +76,7 @@ class tool_oldcoursesremoval_renderer extends plugin_renderer_base {
         $output .= $this->moodleform($paginationform);
         $output .= $this->container_end();
 
-        $output .= $this->flexible_table($courses, $courses->get_rows_per_page(), true);
+        $output .= $this->flexible_table($table, $table->get_rows_per_page(), true);
         $output .= $this->container_end();
 
         $output .= $this->edit_settings();
@@ -118,8 +136,10 @@ class tool_oldcoursesremoval_renderer extends plugin_renderer_base {
      * @return string html to output.
      */
     public function edit_settings() {
+        global $CFG;
         $plugin = new tool_oldcoursesremoval_base();
-        $url = new moodle_url('settings.php', array('section' => 'tool_oldcoursesremoval'));
+        $url = new moodle_url($CFG->wwwroot . '/' . $CFG->admin . '/settings.php',
+                array('section' => 'tool_oldcoursesremoval_settings'));
         return $this->end_of_page_link($url, $plugin->get_string('editsettings'));
     }
 }

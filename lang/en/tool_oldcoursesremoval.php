@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['courseid'] = 'Course ID';
 $string['coursesperpage'] = 'Courses per page';
 $string['createdsince'] = 'Create since';
 $string['cronenabled'] = 'Cron enabled';
@@ -37,13 +38,27 @@ $string['cronstoptime'] = 'Stop time';
 $string['cronstoptime_desc'] = 'The time in a day the cron will stop to be available for the removal.';
 $string['description'] = 'This admin tool allow to remove the old courses based on many criterias like the course visibility, the creation date or if the course has been modified.';
 $string['editsettings'] = 'Edit settings';
+$string['filterrules'] = 'Filter rules';
+$string['filterrules_desc'] = 'These settings control which courses will be removed and which ones will be kept.';
+$string['keepmetacourses'] = 'Keep meta courses';
+$string['keepmetacourses_desc'] = 'Check this to remove only courses not used in a meta course enrolment.';
+$string['keepmodified'] = 'Keep modified courses';
+$string['keepmodified_desc'] = 'Check this to remove only not modified courses.';
+$string['keepvisible'] = 'Keep visible courses';
+$string['keepvisible_desc'] = 'Check this to remove only invisible courses.';
+$string['keepyoungerthan'] = 'Keep courses younger that';
+$string['keepyoungerthan_desc'] = 'Check this to remove only courses older than this duration.';
+$string['keepwithactionlogs'] = 'Keep courses with action logs';
+$string['keepwithactionlogs_desc'] = 'Check this to remove only courses with no add, delete or update logs';
+$string['keepwithmanualgrading'] = 'Keep courses with manual gradings';
+$string['keepwithmanualgrading_desc'] = 'Check this to remove only courses with no manual grade items.';
+$string['keepwithmodules'] = 'Keep courses with modules';
+$string['keepwithmodules_desc'] = 'Check this to remove only courses with no activity or ressource modules added.';
+$string['keepwithquestions'] = 'Keep courses with questions';
+$string['keepwithquestions_desc'] = 'Check this to remove only courses with no questions in the questions bank.';
+$string['nocoursetoremove'] = 'There is currently no courses to remove. You may edit if needed the filter rules in the plugin settings.';
+$string['matchingcourses'] = 'There are currently {$a} courses corresponding to the current filter rules.';
 $string['pluginname'] = 'Auto old courses removal';
-$string['removeonlyinvisible'] = 'Remove only invisible courses';
-$string['removeonlyinvisible_desc'] = 'Check this to remove only invisible courses.';
-$string['removeonlynotmodified'] = 'Remove only not modified courses';
-$string['removeonlynotmodified_desc'] = 'Check this to remove ony not modified courses.';
-$string['removeonlyolderthan'] = 'Remove courses only older that';
-$string['removeonlyolderthan_desc'] = 'Only courses older than this duration will be removed.';
 $string['sendemail'] = 'Send email to administrators';
 $string['sendemail_desc'] = 'Check this to send an email to all administrators each time a process finnish';
 $string['settings'] = 'Settings';

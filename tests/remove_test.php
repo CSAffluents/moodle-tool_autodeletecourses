@@ -99,14 +99,6 @@ class tool_oldcoursesremoval_testcase extends advanced_testcase {
 
     }
 
-
-    public function assert_grade_item_is_created($courseid, $idnumber) {
-        $gradeitem = $this->get_grade_item($courseid, $idnumber);
-        $this->assertNotEmpty($gradeitem, 'The grade item of the course ' . $courseid . ' identified by ' . $idnumber .
-                ' should be created. It is not.');
-        return $gradeitem;
-    }
-
     /**
      * Assert that a specified course is removed.
      *

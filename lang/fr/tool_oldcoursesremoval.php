@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['courseid'] = 'ID du cours';
 $string['coursesperpage'] = 'Cours par page';
 $string['createdsince'] = 'Créé depuis';
 $string['cronenabled'] = 'Cron activé';
@@ -37,13 +38,27 @@ $string['cronstoptime'] = 'Temps de fin';
 $string['cronstoptime_desc'] = 'Le temps de la journée où le cron arrêtera d\'être disponible pour la suppression.';
 $string['description'] = 'Cet outil d\'administration permet de supprimer les anciens cours en fonction de nombreux critères comme la visibilité de cours, la date de création ou si le cours a été modifié.';
 $string['editsettings'] = 'Modifier les réglages';
+$string['filterrules'] = 'Règles de filtrage';
+$string['filterrules_desc'] = 'Ces réglages contrôlent les cours qui seront supprimés et ceux qui seront conservés.';
+$string['keepmetacourses'] = 'Conserver les méta-cours';
+$string['keepmetacourses_desc'] = 'Cochez cette case si vous souhaitez seulement supprimer les cours n\'étant pas utilisés dans une inscription méta-cours.';
+$string['keepmodified'] = 'Conserver les cours modifiés';
+$string['keepmodified_desc'] = 'Cochez cette case si vous souhaitez seulement supprimer les cours non modifiés.';
+$string['keepvisible'] = 'Conserver les cours visibles';
+$string['keepvisible_desc'] = 'Cochez cette case si vous souhaitez seulement supprimer les cours non visibles.';
+$string['keepyoungerthan'] = 'Conserver les cours plus jeunes que';
+$string['keepyoungerthan_desc'] = 'Cochez cette case si vous souhaitez seulement supprimer les cours plus vieux que cette durée.';
+$string['keepwithactionlogs'] = 'Conserver les cours avec des historiques de modification';
+$string['keepwithactionlogs_desc'] = 'Cochez cette case si vous souhaitez seulement supprimer les cours n\'ayant pas d\'historiques d\'ajouts, de suppressions ou de mises à jour.';
+$string['keepwithmanualgrading'] = 'Conserver les cours avec des éléments d\'évaluation manuelle';
+$string['keepwithmanualgrading_desc'] = 'Cochez cette case si vous souhaitez seulement supprimer les cours n\'ayant pas d\'éléments d\'évaluation manuelle.';
+$string['keepwithmodules'] = 'Conserver les cours avec modules';
+$string['keepwithmodules_desc'] = 'Cochez cette case si vous souhaitez seulement supprimer les cours n\'ayant pas de modules d\'activité ou de ressources.';
+$string['keepwithquestions'] = 'Conserver les cours avec questions';
+$string['keepwithquestions_desc'] = 'Cochez cette case si vous souhaitez seulement supprimer les cours n\'ayant pas de questions dans la banque de question.';
+$string['nocoursetoremove'] = 'Il n\'y a actuellement aucun cours à supprimer. Vous pouvez modifier au besoin les règles de filtrage dans les réglages du plugin.';
+$string['matchingcourses'] = 'Il y a actuellement {$a} cours qui correspondent aux règles de filtrage actuelles.';
 $string['pluginname'] = 'Suppression automatique de vieux cours';
-$string['removeonlyinvisible'] = 'Supprimer seulement les cours non visibles';
-$string['removeonlyinvisible_desc'] = 'Cochez cette case si vous souhaitez supprimer seulement les cours non visibles.';
-$string['removeonlynotmodified'] = 'Supprimer seulement les cours non modifiés';
-$string['removeonlynotmodified_desc'] = 'Cochez cette case si vous souhaitez supprimer seulement les cours non modifiés.';
-$string['removeonlyolderthan'] = 'Supprimer seulement les cours plus vieux que';
-$string['removeonlyolderthan_desc'] = 'Seul les cours plus vieux que cette durée seront supprimés.';
 $string['sendemail'] = 'Envoyer un courriel aux administrateurs';
 $string['sendemail_desc'] = 'Cochez cette case pour envoyer un courriel à tous les administrateurs chaque fois qu\'un traitement se termine.';
 $string['settings'] = 'Réglages';

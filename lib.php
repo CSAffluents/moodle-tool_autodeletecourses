@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die;
  * Standard cron function.
  */
 function tool_oldcoursesremoval_cron() {
-    $settings = get_config('tool_oldcoursesremoval');
+    $settings = tool_oldcoursesremoval_base::get_config();
     if (empty($settings->cronenabled)) {
         return;
     }
@@ -50,13 +50,12 @@ function tool_oldcoursesremoval_cron() {
 function tool_oldcoursesremoval_process($settings) {
 
     $hour = (int) date('H');
-    if ($hour < $settings->starthour || $hour >= $settings->stophour) {
-        mtrace('oldcoursesremoval: not between starthour and stophour, so doing nothing (hour = ' .
-                $hour . ').');
+    if ($hour < $settings->starttime || $hour >= $settings->stoptime) {
+        mtrace('oldcoursesremoval: not between starthour and stophour, so doing nothing (hour = ' . $hour . ').');
         return;
     }
 
-    $stoptime = time() + $settings->procesingtime;
+    $stoptime = time() + $settings->processingtime;
 
     mtrace('oldcoursesremoval: processing ...');
     while (time() < $stoptime) {
